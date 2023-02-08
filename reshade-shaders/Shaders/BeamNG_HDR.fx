@@ -40,13 +40,13 @@ float3 CustomPass(float4 vpos : SV_Position, float2 texcoord : TexCoord) : SV_Ta
 
 	float luminance = 0.0;
 
-	for(int i = 0; i < 15; i ++) {
-		for(int j = 0; j < 15; j ++) {
-			luminance += tex2D(ReShade::BackBuffer, float2(i / 15.0, j / 15.0)).rgb;
+	for(int i = 0; i < 10; i ++) {
+		for(int j = 0; j < 10; j ++) {
+			luminance += tex2D(ReShade::BackBuffer, float2(i / 10.0, j / 10.0)).rgb;
 		}
 	}
 
-	luminance /= 15 * 15;
+	luminance /= 100;
 
 	color = color / (1.0 + color);
 	color = (color - 0.5) * 1.3 + 0.5;
@@ -62,7 +62,9 @@ float3 CustomPass(float4 vpos : SV_Position, float2 texcoord : TexCoord) : SV_Ta
  
 	float3 finalColor = color * max(0, color2) * max(0, 1 - luminance) * 2 + original * max(0, 1 - color2);
 
-	return lerp(color, finalColor, min(1, luminance));
+	finalColor = lerp(color, finalColor, min(1, luminance));
+
+	return lerp(length(finalColor), finalColor, 1.2) * 1.21;
 }
 
 technique BeamHDR
